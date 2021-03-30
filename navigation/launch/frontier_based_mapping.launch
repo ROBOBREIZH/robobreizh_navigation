@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<launch>
+
+ <master auto="start"/>
+
+<param name="use_sim_time" value="true" />
+
+    <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen" >
+      <remap from="/scan" to="/pepper/laser_2"/>
+      <param name="map_frame" value="/map"/>
+      <param name="odom_frame" value="/odom"/>
+      <param name="base_frame" value="/base_footprint"/>
+      <param name="map_update_interval" value="2.0"/>
+      <param name="maxUrange" value="50.0"/>
+      <param name="maxRange" value="50.0"/>
+      <param name="sigma" value="0.05"/>
+      <param name="kernelSize" value="1"/>
+      <param name="lstep" value="0.05"/>
+      <param name="astep" value="0.05"/>
+      <param name="iterations" value="5"/>
+      <param name="lsigma" value="0.075"/>
+      <param name="ogain" value="3.0"/>
+      <param name="lskip" value="0"/>
+      <param name="srr" value="0.01"/>
+      <param name="srt" value="0.02"/>
+      <param name="str" value="0.01"/>
+      <param name="stt" value="0.02"/>
+      <param name="linearUpdate" value="0.01"/>
+      <param name="angularUpdate" value="0.01"/>
+      <param name="temporalUpdate" value="0.1"/>
+      <param name="resampleThreshold" value="0.5"/>
+      <param name="particles" value="30"/>
+      <param name="xmin" value="-5.0"/>
+      <param name="ymin" value="-5.0"/>
+      <param name="xmax" value="5.0"/>
+      <param name="ymax" value="5.0"/>
+      <param name="delta" value="0.1"/>
+      <param name="llsamplerange" value="0.01"/>
+      <param name="llsamplestep" value="0.01"/>
+      <param name="lasamplerange" value="0.005"/>
+      <param name="lasamplestep" value="0.005"/>
+      <param name="minimumScore" value="0.005"/>
+    </node>
+
+
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base_node" output="screen">
+
+    <rosparam file="$(find navigation)/nav_config/move_base_params.yaml" command="load" />
+    <rosparam file="$(find navigation)/nav_config/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find navigation)/nav_config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find navigation)/nav_config/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find navigation)/nav_config/global_costmap_params.yaml" command="load" />
+
+    <rosparam file="$(find navigation)/nav_config/dwa_local_planner_params.yaml" command="load" />
+    <rosparam file="$(find navigation)/nav_config/navfn_global_planner_params.yaml" command="load" />
+  </node>
+
+	<node pkg="rviz" type="rviz" name="rviz" args="-d $(find navigation)/rviz_config/explore_mapping.rviz">
+	</node>
+
+<node pkg="rostopic" type="rostopic" name="arbitrary_name" args="pub -1 /pepper/Head_controller/command trajectory_msgs/JointTrajectory '{joint_names: [HeadPitch, HeadYaw], points:[{positions: [0.25, -0.0], time_from_start: [1.0, 0]}]}'" output="screen"/>
+
+
+</launch>
