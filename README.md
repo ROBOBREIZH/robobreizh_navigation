@@ -30,7 +30,7 @@ Then, in the Rviz window, you can publish 5 different points (using publish poin
 
 !!! BE CAREFUL !!! You shouldd respect the following order for the points (left-top, left-bottom, right-bottom, right-top and goal) instead nothing will work:
 
-![Order for the points](../../images/sequence_of_points.png)
+![Order for the points](sequence_of_points.png)
 
 
 ### 2.2. Navigation
