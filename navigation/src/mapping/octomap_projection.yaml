@@ -1,0 +1,7 @@
+image: octomap_projection.pgm
+resolution: 0.050000
+origin: [-9.150000, -6.850000, 0]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196
+
