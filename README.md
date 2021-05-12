@@ -21,7 +21,24 @@ roscd navigation
 chmod +x ./mapping.sh && ./mapping.sh
 ```
 
-You will be able to choose between 2 different mapping modes: the first one use a frontier-based autonomous exploration to map the environment and the second will launch a teleoperation tool for you to drive the robot around manually (using the keyboard).
+You will be able to choose between 4 different mapping modes: 
+1. the first one use a frontier-based autonomous exploration to generate a 2D map of the environment 
+2. the second also uses a frontier-based autonomous exporation but generates a 3D mapping of the environment using octomap package and the depth camera 
+3. the third will launch a teleoperation tool for you to drive the robot around manually (using the keyboard).
+
+#### Saving map
+
+Once you are satisfied with the generated map you might want to save it.
+
+Save rrt 2d map :
+
+    rosrun map_server map_saver -f lasermap map:=/map
+Save octomap 3d projected map :
+    
+    rosrun map_server map_saver -f octomap_projection map:=/projected_map
+Save octomap 3d map :
+    
+    rosrun octomap_server octomap_saver -f mapfile.bt
 
 #### Frontier-based Exploration: [package rrt_exploration](http://wiki.ros.org/rrt_exploration)
 
@@ -32,6 +49,12 @@ Then, in the Rviz window, you can publish 5 different points (using publish poin
 
 ![Order for the points](sequence_of_points.png)
 
+#### Mapping with Octomap: [package octomap](http://wiki.ros.org/octomap)
+
+**Warning :** 
+If you start mapping with octomap and nothing shows up in, you need to restart the script (1 or 2 times). 
+
+To do so, close the 2 terminals and Rviz that has been launch with ```./mapping.sh``` then open a new terminal and start over.
 
 ### 2.2. Navigation
 
@@ -39,16 +62,46 @@ The navigation is performed through the [ROS Navigation Stack](http://wiki.ros.o
 
 ```buildoutcfg
 source devel/setup.bash
-roslaunch navigation navigation.launch
+roscd navigation
+chmod +x ./navigation.sh && ./navigation.sh
 ```
+A message will prompt and ask you to choose a map path, either a predefined one using numbers or the full path of your map file (.yaml). 
 
 This will open Rviz and you can give goal orders to the robot using the 2D nav goal tool.
 
-If you are using another environment you need to provide your map file (.yaml) as an argument:
+Wait until you can see pointcloud on some black area to start navigation.
 
-```buildoutcfg
-roslaunch navigation navigation.launch map_file:=path_to_my_map/my_map.yaml
+To navigate use the 2d nav goal tool. Left-click on to chose the goal, hold it to chose final orientation.
+
+If you used your own path then when you'll see Rviz window you will need to define the initial position of the robot using the 2D pose estimate tool.
+
+**Warnings:**
+Some warnings might appear but you shouldn't be worried about those such as :
+```
+[ WARN] [1620804253.232354731, 1231.068000000]: Costmap2DROS transform timeout. Current time: 1231.0680, global_pose stamp: 1230.5130, tolerance: 0.5000
+[ WARN] [1620804253.232482637, 1231.068000000]: Could not get robot pose, cancelling reconfiguration
 ```
 
-Then when you'll see Rviz window you will need to define the initial position of the robot using the 2D pose estimate tool.
+## 3. Description
 
+This package allows different kind of mapping the environment as well as navigation following a generated map.
+
+### 3.1 Mapping
+
+#### 3.1.1 2D mapping
+
+The 2D mapping is done using pepper lidar.
+The lidar information is sent to a Gmapping node to generate a map.
+
+The problem with this method is that it is not possible for the robot to map the tables for example because only the elements close to the ground are detected.
+
+#### 3.1.2 3D mapping
+
+The 3D mapping is done with the pepper depth camera.
+This one generates a point cloud (pointCloud) which is then processed by an octomap_server node.
+Octomap allows you to generate a map of voxels (pixels in a 3d space) and generate a map.
+
+### 3.2 Navigation
+
+Navigation is done using an adaptative monte carlo localization (amcl) approach.
+Using depth camera points, laser points, a map, a global cost map and a local costmap, it allows the program to plan a trajectory towards the defined goal.
