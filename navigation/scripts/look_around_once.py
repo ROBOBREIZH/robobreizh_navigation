@@ -11,12 +11,13 @@ def move_head():
 	rospy.init_node('move_head', anonymous=True)
 	rate = rospy.Rate(10)
 
-	head_pitch = 0.35
+	head_pitch = 0.25
 	head_yaw = 0.00
-	# incr_pitch = 0.10
+	incr_pitch = 0.10
 	incr_yaw = 0.10
+	count_back_and_forth = 0
 	is_positif = True
-	while not rospy.is_shutdown():
+	while not rospy.is_shutdown() and count_back_and_forth < 4:
 		# [HeadPitch, HeadYaw]
 		# HeadPitch [-0.71, 0.64]
 		# HeadYaw [-2.09,2.09]
@@ -28,15 +29,20 @@ def move_head():
 			head_yaw += incr_yaw
 			if(head_yaw+incr_yaw > 2.09):	
 				is_positif = False
-				# head_pitch+=incr_pitch
+				head_pitch+=incr_pitch
+				count_back_and_forth+=1
 		else:
 			head_yaw -= incr_yaw
 			if(head_yaw-incr_yaw < -2.09):
 				is_positif = True
-				# head_pitch+=incr_pitch
+				head_pitch+=incr_pitch
+				count_back_and_forth+=1
 
 		rate.sleep()
 
+	#put pepper's head straight
+	msg = create_msg([0.25,0.00])
+	pub.publish(msg)
 
 # format data to trajectory_msgs format
 def create_msg(positions):
