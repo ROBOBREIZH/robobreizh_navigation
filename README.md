@@ -95,6 +95,9 @@ The lidar information is sent to a Gmapping node to generate a map.
 
 The problem with this method is that it is not possible for the robot to map the tables for example because only the elements close to the ground are detected.
 
+**WARNING :**
+you must change map topic in rrt simple.launch for it to work
+
 #### 3.1.2 3D mapping
 
 The 3D mapping is done with the pepper depth camera.
@@ -103,5 +106,4 @@ Octomap allows you to generate a map of voxels (pixels in a 3d space) and genera
 
 ### 3.2 Navigation
 
-Navigation is done using an adaptative monte carlo localization (amcl) approach.
-Using depth camera points, laser points, a map, a global cost map and a local costmap, it allows the program to plan a trajectory towards the defined goal.
+In the navigation script you can start teb navigation which allows the robot to avoid obstacles while navigating. It is a layer on top of ros navigation stack.
