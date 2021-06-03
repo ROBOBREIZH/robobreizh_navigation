@@ -71,16 +71,16 @@
 
   <node pkg="move_base" type="move_base" respawn="false" name="move_base_node" output="screen">
 
-    <rosparam file="$(find navigation)/nav_config/move_base_params.yaml" command="load" />
-    <rosparam file="$(find navigation)/nav_config/costmap_common_params.yaml" command="load" ns="global_costmap" />
-    <rosparam file="$(find navigation)/nav_config/costmap_common_params.yaml" command="load" ns="local_costmap" />
-    <rosparam file="$(find navigation)/nav_config/local_costmap_params.yaml" command="load" />
-    <rosparam file="$(find navigation)/nav_config/global_costmap_params.yaml" command="load" />
-    <rosparam file="$(find navigation)/nav_config/dwa_local_planner_params.yaml" command="load" />
-    <rosparam file="$(find navigation)/nav_config/navfn_global_planner_params.yaml" command="load" />
+    <rosparam file="$(find navigation)/config/nav_config/move_base_params.yaml" command="load" />
+    <rosparam file="$(find navigation)/config/nav_config/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find navigation)/config/nav_config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find navigation)/config/nav_config/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find navigation)/config/nav_config/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find navigation)/config/nav_config/dwa_local_planner_params.yaml" command="load" />
+    <rosparam file="$(find navigation)/config/nav_config/navfn_global_planner_params.yaml" command="load" />
   </node>
 
-	<node pkg="rviz" type="rviz" name="rviz" args="-d $(find navigation)/rviz_config/octo_config.rviz">
+	<node pkg="rviz" type="rviz" name="rviz" args="-d $(find navigation)/config/rviz_config/octo_config.rviz">
 	</node>
 
 <node pkg="rostopic" type="rostopic" name="arbitrary_name" args="pub -1 /pepper/Head_controller/command trajectory_msgs/JointTrajectory '{joint_names: [HeadPitch, HeadYaw], points:[{positions: [0.25, -0.0], time_from_start: [1.0, 0]}]}'" output="screen"/>

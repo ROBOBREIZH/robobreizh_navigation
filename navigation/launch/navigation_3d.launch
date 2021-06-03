@@ -5,14 +5,14 @@
    
   <node pkg="move_base" type="move_base" respawn="false" name="move_base_node" output="screen">
 
-    <rosparam file="$(find navigation)/nav_config/move_base_params.yaml" command="load" />
-    <rosparam file="$(find navigation)/nav_config/costmap_common_params.yaml" command="load" ns="global_costmap" />
-    <rosparam file="$(find navigation)/nav_config/costmap_common_params.yaml" command="load" ns="local_costmap" />
-    <rosparam file="$(find navigation)/nav_config/local_costmap_params.yaml" command="load" />
-    <rosparam file="$(find navigation)/nav_config/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find navigation)/config/nav_config/move_base_params.yaml" command="load" />
+    <rosparam file="$(find navigation)/config/nav_config/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find navigation)/config/nav_config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find navigation)/config/nav_config/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find navigation)/config/nav_config/global_costmap_params.yaml" command="load" />
 
-    <rosparam file="$(find navigation)/nav_config/dwa_local_planner_params.yaml" command="load" />
-    <rosparam file="$(find navigation)/nav_config/navfn_global_planner_params.yaml" command="load" />
+    <rosparam file="$(find navigation)/config/nav_config/dwa_local_planner_params.yaml" command="load" />
+    <rosparam file="$(find navigation)/config/nav_config/navfn_global_planner_params.yaml" command="load" />
   </node>
 
     <arg name="map_file" default="$(find navigation)/src/mapping/octomap_projection.yaml" />
@@ -23,6 +23,6 @@
         <arg name="scan_topic" value="/pepper/laser_2" />
     </include>
 
-<node pkg="rviz" type="rviz" name="rviz" args="-d $(find navigation)/rviz_config/navigation.rviz"></node>
+<node pkg="rviz" type="rviz" name="rviz" args="-d $(find navigation)/config/rviz_config/navigation.rviz"></node>
 
 </launch>
