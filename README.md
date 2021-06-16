@@ -42,7 +42,7 @@ Save octomap 3d map :
 
 #### Frontier-based Exploration: [package rrt_exploration](http://wiki.ros.org/rrt_exploration)
 
-If you choose the option 1 for mapping you need to configure the frontier-based algorithm. First wait that all the windows (Rviz + 2 terminals) are launch and that you have "the map and global costmaps are received" message in the second terminal.
+If you choose the option 1 or 2 for mapping you need to configure the frontier-based algorithm. First wait that all the windows (Rviz + 2 terminals) are launch and that you have "the map and global costmaps are received" message in the second terminal.
 Then, in the Rviz window, you can publish 5 different points (using publish point tool): the 4 first ones will be for the size of the map that you want. The last one is the first goal for the robot and should be in the already mapped area (in white area in Rviz) while the others can be anywhere else.
 
 !!! BE CAREFUL !!! You shouldd respect the following order for the points (left-top, left-bottom, right-bottom, right-top and goal) instead nothing will work:
@@ -75,12 +75,22 @@ To navigate use the 2d nav goal tool. Left-click on to chose the goal, hold it t
 
 If you used your own path then when you'll see Rviz window you will need to define the initial position of the robot using the 2D pose estimate tool.
 
-**Warnings:**
+**Warnings :**
 Some warnings might appear but you shouldn't be worried about those such as :
-```
+```bash
 [ WARN] [1620804253.232354731, 1231.068000000]: Costmap2DROS transform timeout. Current time: 1231.0680, global_pose stamp: 1230.5130, tolerance: 0.5000
 [ WARN] [1620804253.232482637, 1231.068000000]: Could not get robot pose, cancelling reconfiguration
 ```
+#### More on teb local planner : [package teb_local_planner](http://wiki.ros.org/teb_local_planner)
+If you want to get familiar with the package, i'd recommand doing the tutorial provided.
+
+To adjust the parameters of teb local planner you can use the ros tool rqt_reconfigure using :
+```bash
+rosrun rqt_reconfigure rqt_reconfigure
+```
+**Warnings :**
+Sometimes the moving object would collide with the robot, it has hard time predicting moving element trajectory.
+Sometimes the robot trajectory won't be curved enough ending in the incapability to properly reach the goal.
 
 ## 3. Description
 
@@ -103,6 +113,15 @@ you must change map topic in rrt simple.launch for it to work
 The 3D mapping is done with the pepper depth camera.
 This one generates a point cloud (pointCloud) which is then processed by an octomap_server node.
 Octomap allows you to generate a map of voxels (pixels in a 3d space) and generate a map.
+
+By default every obstacle is represented but you can filter them using the node parameters. 
+```xml
+<!-- avoid creating voxels for the ground -->
+<param name="filter_ground" value="true" />
+<!-- avoid rendering voxel above this height -->
+<param name="occupancy_max_z" value="1.6" />
+```
+This is useful for using a projected map of the voxel map.
 
 ### 3.2 Navigation
 
