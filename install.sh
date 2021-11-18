@@ -6,6 +6,6 @@ sudo apt-get install ros-kinetic-gmapping -y
 sudo apt-get install ros-kinetic-amcl -y
 sudo apt-get install ros-kinetic-move-base -y
 sudo apt-get install ros-kinetic-map-server -y
-sudo apt-get install ros-kinectic-octomap
-sudo apt-get install ros-kinectic-octomap-server
-sudo apt-get install ros-kinetic-teb-local-planner
+sudo apt-get install ros-kinetic-octomap -y
+sudo apt-get install ros-kinetic-octomap-server -y
+sudo apt-get install ros-kinetic-teb-local-planner -y
