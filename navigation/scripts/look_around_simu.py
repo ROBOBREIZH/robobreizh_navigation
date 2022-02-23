@@ -3,16 +3,18 @@
 
 from rosgraph.names import is_private
 import rospy
-from naoqi_bridge_msgs.msg import JointAnglesWithSpeed 
-def move_head():
-	pub = rospy.Publisher('/joint_angles', JointAnglesWithSpeed, queue_size=10)
-	rospy.init_node('move_head', anonymous=True)
-	rate = rospy.Rate(4)
+from trajectory_msgs.msg import JointTrajectory
+from trajectory_msgs.msg import JointTrajectoryPoint
 
-	head_pitch = 0.15
+def move_head():
+	pub = rospy.Publisher('pepper/Head_controller/command', JointTrajectory, queue_size=10)
+	rospy.init_node('move_head', anonymous=True)
+	rate = rospy.Rate(10)
+
+	head_pitch = 0.25
 	head_yaw = 0.00
 	incr_pitch = 0.10
-	incr_yaw = 0.05
+	incr_yaw = 0.10
 	count_back_and_forth = 0
 	is_positif = True
 	while not rospy.is_shutdown() and count_back_and_forth < 4:
@@ -39,21 +41,26 @@ def move_head():
 		rate.sleep()
 
 	#put pepper's head straight
-	msg = create_msg([0.15,0.00])
+	msg = create_msg([0.25,0.00])
 	pub.publish(msg)
 
 # format data to trajectory_msgs format
 def create_msg(positions):
-	trajectory = JointAnglesWithSpeed() 
+	trajectory = JointTrajectory()
+	point = JointTrajectoryPoint()
 	trajectory.header.stamp = rospy.Time.now()
 	trajectory.header.frame_id = "";
 
 	trajectory.joint_names.append("HeadPitch");
 	trajectory.joint_names.append("HeadYaw");
 
-	trajectory.joint_angles = positions
-	trajectory.speed = 0.1
-	trajectory.relative = 0
+	for pose in positions:
+		point.positions.append(pose)
+
+	point.time_from_start.secs = 1
+	point.time_from_start.nsecs = 0 
+
+	trajectory.points.append(point)
 
 	return trajectory
 
